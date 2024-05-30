@@ -5,13 +5,41 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 import SelectDropdown from "react-native-select-dropdown";
 import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
+import { uri } from "../url";
 
 const models = ["REZNET", "DL"];
 const UploadImage = () => {
   const navigation = useNavigation();
   const [selectedValue, setSelectedValue] = React.useState("");
   const [selectedImage, setSelectedImage] = React.useState(null);
-
+  const positive_reports = [
+    {
+      accuracy_score: "85%",
+      model: { model_name: selectedValue },
+      lesion: { lesion_severity: "High", lesion_type: "MAL" },
+    },
+    {
+      accuracy_score: "90%",
+      model: { model_name: selectedValue },
+      lesion: { lesion_severity: "Medium", lesion_type: "BCC" },
+    },
+    {
+      accuracy_score: "87%",
+      model: { model_name: selectedValue },
+      lesion: { lesion_severity: "High", lesion_type: "MAL" },
+    },
+    {
+      accuracy_score: "83%",
+      model: { model_name: selectedValue },
+      lesion: { lesion_severity: "Low", lesion_type: "SCC" },
+    },
+    {
+      accuracy_score: "91%",
+      model: { model_name: selectedValue },
+      lesion: { lesion_severity: "Low", lesion_type: "SCC" },
+    },
+  ];
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -19,17 +47,54 @@ const UploadImage = () => {
       aspect: [4, 3],
       quality: 1,
     });
-    console.log(result.assets[0].uri);
     setSelectedImage(result.assets[0].uri);
+  };
+  const handleSubmit = async () => {
+    if (!selectedImage) {
+      Alert.alert(
+        "Image Is Required",
+        "please select the image, image is required!"
+      );
+      return;
+    }
+    if (!selectedValue) {
+      Alert.alert(
+        "Model Is Required",
+        "please select the model, model is required!"
+      );
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `${uri}/images`,
+        JSON.stringify({
+          image_url: selectedImage,
+          image_source: "dermostatic",
+          captured_date: new Date(),
+          patient_id: "65e09e3d6efd9a02a4c706c2",
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = response.data.skin_image;
+      if (!response.data) {
+        throw new Error("No response data received");
+      }
+    } catch (error) {
+      console.log(Object.values(error));
+    }
+    const rand = Math.random(5);
+    console.log(rand);
+    // navigation.navigate("ReportResults", { report, positive_reports[rand]})
   };
 
   return (
     <View style={styles.uploadImage}>
       <View style={styles.uploadImageChild}></View>
-      <Pressable
-        style={styles.continue}
-        onPress={() => navigation.navigate("ReportResults")}
-      >
+      <Pressable style={styles.continue} onPress={() => handleSubmit()}>
         <Text
           style={{
             textAlign: "center",

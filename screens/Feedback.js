@@ -49,6 +49,7 @@ const Feedback = () => {
         "Field Is Required",
         "please fill the required fields, all fields are required!"
       );
+      return;
     }
     try {
       const response = await axios.post(

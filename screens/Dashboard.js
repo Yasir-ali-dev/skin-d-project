@@ -154,12 +154,12 @@ const Dashboard = ({ route }) => {
           DermDetect
         </Text>
       </View>
-
+      {/* 
       <Image
         style={styles.vectorIcon}
         contentFit="cover"
-        source={require("../assets/vector.png")}
-      />
+        source={require("../assets/vector@3x.png")}
+      /> */}
     </View>
   );
 };

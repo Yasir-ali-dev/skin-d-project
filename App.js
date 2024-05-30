@@ -34,9 +34,9 @@ const App = () => {
   //   "WorkSans-Regular": require("./assets/fonts/WorkSans-Regular.ttf"),
   // });
 
-  if (!fontsLoaded && !error) {
-    return null;
-  }
+  // if (!fontsLoaded && !error) {
+  //   return null;
+  // }
 
   return (
     <>
