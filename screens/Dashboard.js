@@ -3,17 +3,12 @@ import { StyleSheet, View, Text, Pressable, Touchable } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import ProfileContainer from "../components/ProfileContainer";
-import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
+import { Border, Color, FontSize } from "../GlobalStyles";
 import { PieChart, LineChart } from "react-native-gifted-charts";
 
 const Dashboard = ({ route }) => {
   const user = route.params.user;
   const navigation = useNavigation();
-  const pieData = [
-    { value: 54, color: "#177AD5" },
-    { value: 40, color: "#79D2DE" },
-    { value: 20, color: "#ED6665", shiftX: 28, shiftY: -18 },
-  ];
 
   const lineData = [
     { value: 0 },

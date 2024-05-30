@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, Text, View } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
-import { Color, FontFamily } from "../GlobalStyles";
+import { Color } from "../GlobalStyles";
 import { useNavigation } from "@react-navigation/core";
+import { uri } from "./../url";
 
 const ResultSummary = () => {
-  const [patients, setPatients] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [reports, setReports] = useState([]);
-
+  const [patients, setPatients] = React.useState([]);
+  const [feedbacks, setFeedbacks] = React.useState([]);
+  const [reports, setReports] = React.useState([]);
+  const [line, setLine] = useState();
   const getReportData = async () => {
     try {
       const response = await fetch(`${uri}/reports`);
@@ -24,18 +25,21 @@ const ResultSummary = () => {
   };
 
   const getPatientData = async () => {
+    let data;
     try {
       const response = await fetch(`${uri}/patients`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
+      data = await response.json();
       setPatients(data.patients);
     } catch (error) {
       console.log(error);
     }
   };
 
+  let [negative, setNegative] = useState(0);
+  let [positive, setPositive] = useState(0);
   const getFeedbackData = async () => {
     try {
       const response = await fetch(`${uri}/feedbacks`);
@@ -45,60 +49,22 @@ const ResultSummary = () => {
       const data = await response.json();
 
       setFeedbacks(data.all_feedbacks);
+      setNegative(
+        feedbacks.filter((feedback) => feedback.feedback_type == "-ve").length
+      );
+      setPositive(
+        feedbacks.filter((feedback) => feedback.feedback_type == "+ve").length
+      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     getPatientData();
     getFeedbackData();
     getReportData();
   }, []);
-
-  const barData = [
-    {
-      value: 230,
-      label: "Jan",
-      frontColor: "#4ABFF4",
-      sideColor: "#23A7F3",
-      topColor: "#92e6f6",
-    },
-    {
-      value: 180,
-      label: "Feb",
-      frontColor: "#79C3DB",
-      sideColor: "#68BCD7",
-      topColor: "#9FD4E5",
-    },
-    {
-      value: 195,
-      label: "Mar",
-      frontColor: "#28B2B3",
-      sideColor: "#0FAAAB",
-      topColor: "#66C9C9",
-    },
-    {
-      value: 250,
-      label: "Apr",
-      frontColor: "#4ADDBA",
-      sideColor: "#36D9B2",
-      topColor: "#7DE7CE",
-    },
-    {
-      value: 320,
-      label: "May",
-      frontColor: "#91E3E3",
-      sideColor: "#85E0E0",
-      topColor: "#B0EAEB",
-    },
-  ];
-
-  const pieData = [
-    { value: 54, color: "#177AD5" },
-    { value: 40, color: "#79D2DE" },
-    { value: 20, color: "#ED6665" },
-  ];
 
   const lineData = [
     { value: 0 },
@@ -139,67 +105,131 @@ const ResultSummary = () => {
           paddingVertical: 5,
         }}
       >
-        <View style={{ display: "flex", flexDirection: "row", padding: 3 }}>
-          <Image source={require("../assets/patient-icon.png")}></Image>
+        <View
+          style={{ display: "flex", flexDirection: "row", padding: 3, gap: 5 }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image source={require("../assets/patient-icon.png")}></Image>
+            <Text>patients</Text>
+          </View>
           <Text
             style={{
-              fontSize: 25,
+              fontSize: 40,
               fontWeight: "700",
               color: Color.colorForestgreen_200,
             }}
           >
-            7
+            {patients.length}
           </Text>
         </View>
-        <View style={{ display: "flex", flexDirection: "row", padding: 3 }}>
-          <Image source={require("../assets/microscope-icon.png")}></Image>
+        <View
+          style={{ display: "flex", flexDirection: "row", padding: 3, gap: 5 }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image source={require("../assets/microscope-icon.png")}></Image>
+
+            <Text>reports</Text>
+          </View>
           <Text
             style={{
-              fontSize: 25,
+              fontSize: 40,
               fontWeight: "700",
               color: Color.colorForestgreen_200,
             }}
           >
-            5
+            {reports.length}
           </Text>
         </View>
-        <View style={{ display: "flex", flexDirection: "row", padding: 3 }}>
-          <Image source={require("../assets/feedback-icon.png")}></Image>
+
+        <View
+          style={{ display: "flex", flexDirection: "row", padding: 3, gap: 5 }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image source={require("../assets/feedback-icon.png")}></Image>
+
+            <Text>feedbacks</Text>
+          </View>
           <Text
             style={{
-              fontSize: 25,
+              fontSize: 40,
               fontWeight: "700",
               color: Color.colorForestgreen_200,
             }}
           >
-            5
-          </Text>
-        </View>
-        <View style={{ display: "flex", flexDirection: "row", padding: 3 }}>
-          <Image source={require("../assets/reports-icon.png")}></Image>
-          <Text
-            style={{
-              fontSize: 25,
-              fontWeight: "700",
-              color: Color.colorForestgreen_200,
-            }}
-          >
-            5
+            {feedbacks.length}
           </Text>
         </View>
       </View>
       <BarChart
-        height={180}
+        height={150}
         showFractionalValue
         showYAxisIndices
         hideRules
         noOfSections={4}
-        maxValue={400}
-        data={barData}
+        maxValue={50}
+        data={[
+          {
+            value: reports.filter(
+              (report) => report.lesion.lesion_type == "MEL"
+            ).length,
+            label: "MEL",
+            frontColor: "#4ABFF4",
+            sideColor: "#23A7F3",
+            topColor: "#92e6f6",
+          },
+          {
+            value: reports.filter(
+              (report) => report.lesion.lesion_type == "SCC"
+            ).length,
+            label: "SCC",
+            frontColor: "#79C3DB",
+            sideColor: "#68BCD7",
+            topColor: "#9FD4E5",
+          },
+          {
+            value: reports.filter(
+              (report) => report.lesion.lesion_type == "BCC"
+            ).length,
+            label: "BCC",
+            frontColor: "#28B2B3",
+            sideColor: "#0FAAAB",
+            topColor: "#66C9C9",
+          },
+          {
+            value: reports.filter(
+              (report) => report.lesion.lesion_type == "MCC"
+            ).length,
+            label: "MCC",
+            frontColor: "#4ADDBA",
+            sideColor: "#36D9B2",
+            topColor: "#7DE7CE",
+          },
+        ]}
         barWidth={40}
         sideWidth={15}
         isThreeD
-        side="right"
+        side="center"
       />
       <View
         style={{
@@ -211,7 +241,16 @@ const ResultSummary = () => {
         }}
       >
         <PieChart
-          data={pieData}
+          data={[
+            {
+              value: negative,
+              color: "#ED6665",
+            },
+            {
+              value: positive,
+              color: "#42f584",
+            },
+          ]}
           radius={90}
           donut
           showText
@@ -233,13 +272,15 @@ const ResultSummary = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: 10,
+            gap: 7,
             paddingHorizontal: 5,
           }}
         >
-          <Text style={{ color: "red", fontSize: 20 }}>RED </Text>
-          <Text style={{ color: "blue", fontSize: 20 }}>BLUE </Text>
-          <Text style={{ color: "lightblue", fontSize: 20 }}>SKY BLUE</Text>
+          <Text style={{ color: "blue", fontSize: 20 }}>
+            no +ve/-ve feedbacks
+          </Text>
+          <Text style={{ color: "red", fontSize: 20 }}>-ve </Text>
+          <Text style={{ color: "#42f584", fontSize: 20 }}>+ve</Text>
         </View>
       </View>
 
