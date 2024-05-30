@@ -22,17 +22,17 @@ import FeedbackDetails from "./screens/FeedbackDetails";
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
 
-  const [fontsLoaded, error] = useFonts({
-    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
-    "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
-    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-ExtraBold": require("./assets/fonts/Poppins-ExtraBold.ttf"),
-    "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
-    "Mitr-Light": require("./assets/fonts/Mitr-Light.ttf"),
-    "Urbanist-Medium": require("./assets/fonts/Urbanist-Medium.ttf"),
-    "WorkSans-Regular": require("./assets/fonts/WorkSans-Regular.ttf"),
-  });
+  // const [fontsLoaded, error] = useFonts({
+  //   "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
+  //   "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
+  //   "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
+  //   "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+  //   "Poppins-ExtraBold": require("./assets/fonts/Poppins-ExtraBold.ttf"),
+  //   "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
+  //   "Mitr-Light": require("./assets/fonts/Mitr-Light.ttf"),
+  //   "Urbanist-Medium": require("./assets/fonts/Urbanist-Medium.ttf"),
+  //   "WorkSans-Regular": require("./assets/fonts/WorkSans-Regular.ttf"),
+  // });
 
   if (!fontsLoaded && !error) {
     return null;
