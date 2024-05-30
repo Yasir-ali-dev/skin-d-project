@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     width: 170,
     marginLeft: 0,
     textAlign: "center",
-    fontFamily: FontFamily.poppinsRegular,
   },
   nameFrame: {
     borderRadius: Border.br_lg,
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2.4,
     width: 20,
     height: 30,
-    fontFamily: FontFamily.poppinsRegular,
     color: Color.secondarySRedLight,
   },
   help: {
@@ -90,7 +88,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     lineHeight: 10,
     fontWeight: "300",
-    fontFamily: FontFamily.mitrLight,
     width: 29,
     height: 12,
   },

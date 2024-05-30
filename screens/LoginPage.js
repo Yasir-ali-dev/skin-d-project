@@ -70,6 +70,24 @@ const LoginPage = () => {
     }
   };
 
+  const getData = async () => {
+    console.log("Fdfs");
+    try {
+      const response = await fetch(`http://10.102.139.57:3002/`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log(Object.keys(data));
+    } catch (error) {
+      console.log(Object.keys(error));
+    }
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={true}
