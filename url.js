@@ -1,1 +1,1 @@
-export const uri = "http://10.102.139.57:4000";
+export const uri = "http://192.168.111.242:4000";

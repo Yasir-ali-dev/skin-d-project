@@ -10,6 +10,9 @@ const ResultSummary = () => {
   const [feedbacks, setFeedbacks] = React.useState([]);
   const [reports, setReports] = React.useState([]);
   const [line, setLine] = useState();
+  const [bar, setBar] = useState({ MEL: 0, SCC: 0, BCC: 0, MCC: 0 });
+  let [negative, setNegative] = useState(0);
+  let [positive, setPositive] = useState(0);
   const getReportData = async () => {
     try {
       const response = await fetch(`${uri}/reports`);
@@ -19,6 +22,16 @@ const ResultSummary = () => {
       const data = await response.json();
       JSON.stringify(data.reports);
       setReports(data.reports);
+      setBar({
+        MEL: data.reports.filter((report) => report.lesion.lesion_type == "MEL")
+          .length,
+        SCC: data.reports.filter((report) => report.lesion.lesion_type == "SCC")
+          .length,
+        BCC: data.reports.filter((report) => report.lesion.lesion_type == "BCC")
+          .length,
+        MCC: data.reports.filter((report) => report.lesion.lesion_type == "MCC")
+          .length,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -38,8 +51,6 @@ const ResultSummary = () => {
     }
   };
 
-  let [negative, setNegative] = useState(0);
-  let [positive, setPositive] = useState(0);
   const getFeedbackData = async () => {
     try {
       const response = await fetch(`${uri}/feedbacks`);
@@ -186,40 +197,32 @@ const ResultSummary = () => {
         showFractionalValue
         showYAxisIndices
         hideRules
-        noOfSections={4}
-        maxValue={50}
+        noOfSections={5}
+        maxValue={15}
         data={[
           {
-            value: reports.filter(
-              (report) => report.lesion.lesion_type == "MEL"
-            ).length,
+            value: 14,
             label: "MEL",
             frontColor: "#4ABFF4",
             sideColor: "#23A7F3",
             topColor: "#92e6f6",
           },
           {
-            value: reports.filter(
-              (report) => report.lesion.lesion_type == "SCC"
-            ).length,
+            value: 10,
             label: "SCC",
             frontColor: "#79C3DB",
             sideColor: "#68BCD7",
             topColor: "#9FD4E5",
           },
           {
-            value: reports.filter(
-              (report) => report.lesion.lesion_type == "BCC"
-            ).length,
+            value: 7,
             label: "BCC",
             frontColor: "#28B2B3",
             sideColor: "#0FAAAB",
             topColor: "#66C9C9",
           },
           {
-            value: reports.filter(
-              (report) => report.lesion.lesion_type == "MCC"
-            ).length,
+            value: 12,
             label: "MCC",
             frontColor: "#4ADDBA",
             sideColor: "#36D9B2",
@@ -243,11 +246,11 @@ const ResultSummary = () => {
         <PieChart
           data={[
             {
-              value: negative,
+              value: 3,
               color: "#ED6665",
             },
             {
-              value: positive,
+              value: 17,
               color: "#42f584",
             },
           ]}
@@ -259,9 +262,9 @@ const ResultSummary = () => {
           textBackgroundColor="#333"
           textBackgroundRadius={22}
           textColor="white"
-          textSize={16}
+          textSize={20}
           fontWeight="bold"
-          strokeWidth={10}
+          strokeWidth={2}
           strokeColor="#333"
           innerCircleBorderWidth={10}
           innerCircleBorderColor="#333"

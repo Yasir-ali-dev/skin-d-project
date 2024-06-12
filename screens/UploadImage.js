@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Pressable, Button } from "react-native";
+import { StyleSheet, View, Text, Pressable, Button, Alert } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
@@ -16,27 +16,72 @@ const UploadImage = () => {
   const positive_reports = [
     {
       accuracy_score: "85%",
-      model: { model_name: selectedValue },
+      report_details: "23.1 inch Lesion on Body",
+      model: selectedValue,
+      report_generate_date: new Date().toISOString(),
       lesion: { lesion_severity: "High", lesion_type: "MAL" },
     },
     {
       accuracy_score: "90%",
-      model: { model_name: selectedValue },
+      model: selectedValue,
+      report_generate_date: new Date().toISOString(),
+      report_details: "23.1 inch Lesion on Body",
       lesion: { lesion_severity: "Medium", lesion_type: "BCC" },
     },
     {
       accuracy_score: "87%",
-      model: { model_name: selectedValue },
+      model: selectedValue,
+      report_generate_date: new Date().toISOString(),
+      report_details: "23.1 inch Lesion on Body",
       lesion: { lesion_severity: "High", lesion_type: "MAL" },
     },
     {
       accuracy_score: "83%",
-      model: { model_name: selectedValue },
+      model: selectedValue,
+      report_generate_date: new Date().toISOString(),
+      report_details: "23.1 inch Lesion on Body",
       lesion: { lesion_severity: "Low", lesion_type: "SCC" },
     },
     {
       accuracy_score: "91%",
-      model: { model_name: selectedValue },
+      model: selectedValue,
+      report_generate_date: new Date().toISOString(),
+      report_details: "23.1 inch Lesion on Body",
+      lesion: { lesion_severity: "Low", lesion_type: "SCC" },
+    },
+    {
+      accuracy_score: "82%",
+      model: selectedValue,
+      report_details: "23.1 inch Lesion on Body",
+      report_generate_date: new Date().toISOString(),
+      lesion: { lesion_severity: "High", lesion_type: "MAL" },
+    },
+    {
+      accuracy_score: "79%",
+      model: selectedValue,
+      report_details: "23.1 inch Lesion on Body",
+      report_generate_date: new Date().toISOString(),
+      lesion: { lesion_severity: "Medium", lesion_type: "MCC" },
+    },
+    {
+      accuracy_score: "81%",
+      model: selectedValue,
+      report_details: "23.1 inch Lesion on Body",
+      report_generate_date: new Date().toISOString(),
+      lesion: { lesion_severity: "Medium", lesion_type: "MCC" },
+    },
+    {
+      accuracy_score: "73%",
+      model: selectedValue,
+      report_details: "23.1 inch Lesion on Body",
+      report_generate_date: new Date().toISOString(),
+      lesion: { lesion_severity: "Low", lesion_type: "SCC" },
+    },
+    {
+      accuracy_score: "91%",
+      report_generate_date: new Date().toISOString(),
+      report_details: "23.1 inch Lesion on Body",
+      model: selectedValue,
       lesion: { lesion_severity: "Low", lesion_type: "SCC" },
     },
   ];
@@ -64,6 +109,7 @@ const UploadImage = () => {
       );
       return;
     }
+    let image;
     try {
       const response = await axios.post(
         `${uri}/images`,
@@ -79,16 +125,36 @@ const UploadImage = () => {
           },
         }
       );
-      const data = response.data.skin_image;
+      image = response.data.skin_image;
       if (!response.data) {
         throw new Error("No response data received");
       }
     } catch (error) {
       console.log(Object.values(error));
     }
-    const rand = Math.random(5);
-    console.log(rand);
-    // navigation.navigate("ReportResults", { report, positive_reports[rand]})
+    const rand = Math.floor(Math.random() * 10);
+    const report = positive_reports[rand];
+    report.image_id = image._id;
+    try {
+      const response = await axios.post(
+        `${uri}/reports`,
+        JSON.stringify(report),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = response.data;
+      if (!response.data) {
+        throw new Error("No response data received");
+      }
+      Alert.alert("Report is Created", `successfully`);
+      const reportResult = positive_reports[rand];
+      navigation.navigate("ReportResults", { report: reportResult });
+    } catch (error) {
+      console.log(Object.values(error));
+    }
   };
 
   return (
